@@ -1,0 +1,10 @@
+{
+  "name": "Context Health Bar Marketplace",
+  "owner": { "name": "Gabriel Kuhn" },
+  "plugins": [
+    {
+      "name": "context-health-bar",
+      "source": "./"
+    }
+  ]
+}
