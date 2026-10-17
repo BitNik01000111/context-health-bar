@@ -1,0 +1,20 @@
+{
+  "name": "context-health-bar",
+  "version": "0.1.0",
+  "description": "Visual battery-style health bar showing context consumption, color-coded from red (heavy) to green (light)",
+  "author": { "name": "Gabriel Kuhn" },
+  "userConfig": {
+    "maxTokens": {
+      "type": "number",
+      "title": "Max Tokens",
+      "default": 180000,
+      "description": "Maximum tokens to display (6 bars × 3 colors × 10k each)"
+    },
+    "autoDetectModel": {
+      "type": "boolean",
+      "title": "Auto-Detect Model",
+      "default": true,
+      "description": "Auto-detect model and suggest config"
+    }
+  }
+}
