@@ -1,0 +1,39 @@
+{
+  "name": "context-health-bar",
+  "version": "0.3.0",
+  "description": "Battery-style context health bar below the prompt, color-coded red to green, with five-hour and seven-day usage-window reset countdowns",
+  "author": {
+    "name": "Gabriel Kuhn"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/BitNik01000111/context-health-bar",
+  "repository": "https://github.com/BitNik01000111/context-health-bar",
+  "keywords": [
+    "context",
+    "statusbar",
+    "usage",
+    "rate-limit",
+    "prompt"
+  ],
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "maxTokens": {
+      "type": "number",
+      "title": "Fallback Window (tokens)",
+      "default": 180000,
+      "description": "Context window size used until the model's real window is known (9 bars total, 3 per color)"
+    },
+    "yellowPercent": {
+      "type": "number",
+      "title": "Yellow Percent",
+      "default": 30,
+      "description": "Percent of the context window at which the bar shows the yellow tip \" → considere /passagem\". Overridden by /context-config yellow <n>"
+    },
+    "redPercent": {
+      "type": "number",
+      "title": "Red Percent",
+      "default": 40,
+      "description": "Percent of the context window at which the bar shows the red tip \" → /passagem e /clear\" (replaces the yellow tip). Overridden by /context-config red <n>"
+    }
+  }
+}

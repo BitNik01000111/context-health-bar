@@ -1,0 +1,12 @@
+{
+  "name": "context-health-bar",
+  "owner": { "name": "Gabriel Kuhn" },
+  "description": "Claude Code mods by Gabriel Kuhn",
+  "plugins": [
+    {
+      "name": "context-health-bar",
+      "source": "./",
+      "description": "Battery-style context health bar below the prompt, with usage-window reset countdowns"
+    }
+  ]
+}
