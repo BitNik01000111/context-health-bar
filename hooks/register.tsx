@@ -9,9 +9,17 @@ const ANSI = {
   BOLD: "\x1b[1m",
 };
 
-const BARS_PER_COLOR = 6;
-const TOKENS_PER_BAR = 10000;
-const TOTAL_TOKENS = BARS_PER_COLOR * 3 * TOKENS_PER_BAR; // 180k
+// Half-size bar: 3 segments per color zone, 9 total (was 6/18)
+const BARS_PER_COLOR = 3;
+const TOKENS_PER_BAR = 20000;
+const TOTAL_TOKENS = BARS_PER_COLOR * 3 * TOKENS_PER_BAR; // 180k, same default range
+
+// Zone order left-to-right: RED, YELLOW, GREEN (fills left-to-right as tokens are consumed)
+function zoneColorFor(index: number): string {
+  if (index < BARS_PER_COLOR) return ANSI.RED;
+  if (index < BARS_PER_COLOR * 2) return ANSI.YELLOW;
+  return ANSI.GREEN;
+}
 
 // Session-scoped state
 let sessionState = {
@@ -21,37 +29,21 @@ let sessionState = {
   sessionStartTokens: 0,
 };
 
-function getBarColor(consumed: number, max: number): string {
-  const ratio = Math.min(consumed / max, 1);
-  const barIndex = Math.floor(ratio * (BARS_PER_COLOR * 3));
-
-  // Green zone: 0-6 bars (0-60k)
-  if (barIndex < BARS_PER_COLOR) {
-    return ANSI.GREEN;
-  }
-  // Yellow zone: 6-12 bars (60-120k)
-  else if (barIndex < BARS_PER_COLOR * 2) {
-    return ANSI.YELLOW;
-  }
-  // Red zone: 12-18 bars (120-180k)
-  else {
-    return ANSI.RED;
-  }
-}
-
 function renderHealthBar(consumed: number, max: number): string {
+  const totalBars = BARS_PER_COLOR * 3;
   const ratio = Math.min(consumed / max, 1);
-  const filledBars = Math.round(ratio * (BARS_PER_COLOR * 3));
-  const color = getBarColor(consumed, max);
+  const filledBars = Math.round(ratio * totalBars);
 
   let bar = "";
-  for (let i = 0; i < BARS_PER_COLOR * 3; i++) {
-    const char = i < filledBars ? "█" : "░";
-    bar += char;
+  for (let i = 0; i < totalBars; i++) {
+    if (i < filledBars) {
+      bar += zoneColorFor(i) + "▮" + ANSI.RESET;
+    } else {
+      bar += "▯";
+    }
   }
 
-  // Wrap filled portion in color
-  return color + bar.substring(0, filledBars) + ANSI.RESET + bar.substring(filledBars);
+  return "|" + bar + "|";
 }
 
 function formatTokens(tokens: number): string {
