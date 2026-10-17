@@ -1,32 +1,39 @@
 {
   "name": "context-health-bar",
-  "version": "0.1.0",
-  "description": "Visual battery-style health bar showing context consumption, color-coded from red (heavy) to green (light)",
-  "author": { "name": "Gabriel Kuhn" },
+  "version": "0.3.0",
+  "description": "Battery-style context health bar below the prompt, color-coded red to green, with 5h/7d usage-window reset countdowns",
+  "author": {
+    "name": "Gabriel Kuhn"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/BitNik01000111/context-health-bar",
+  "repository": "https://github.com/BitNik01000111/context-health-bar",
+  "keywords": [
+    "context",
+    "statusbar",
+    "usage",
+    "rate-limit",
+    "prompt"
+  ],
+  "types": "./types/index.d.ts",
   "userConfig": {
     "maxTokens": {
       "type": "number",
-      "title": "Max Tokens",
+      "title": "Fallback Window (tokens)",
       "default": 180000,
-      "description": "Fallback max tokens shown before the real context window is known (9 bars total, 3 per color); once available, the model's actual window size is used instead"
+      "description": "Context window size used until the model's real window is known (9 bars total, 3 per color)"
     },
-    "autoDetectModel": {
-      "type": "boolean",
-      "title": "Auto-Detect Model",
-      "default": true,
-      "description": "Auto-detect model and suggest config"
-    },
-    "redThreshold": {
+    "yellowPercent": {
       "type": "number",
-      "title": "Red Threshold",
-      "default": 80000,
-      "description": "Tokens used at which the red /passagem + /clear tip is appended to the status bar"
+      "title": "Yellow Percent",
+      "default": 30,
+      "description": "Percent of the context window at which the bar shows the yellow tip \" → considere /passagem\". Overridden by /context-config yellow <n>"
     },
-    "yellowThreshold": {
+    "redPercent": {
       "type": "number",
-      "title": "Yellow Threshold",
-      "default": 60000,
-      "description": "Tokens used at which the status bar moves to the yellow zone (reference parity with the statusline script; documentation only)"
+      "title": "Red Percent",
+      "default": 40,
+      "description": "Percent of the context window at which the bar shows the red tip \" → /passagem e /clear\" (replaces the yellow tip). Overridden by /context-config red <n>"
     }
   }
 }
