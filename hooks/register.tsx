@@ -1,10 +1,12 @@
 import { Register } from "claude-code";
 
-// Colors for the 3 zones: red (heavy), yellow (medium), green (light)
-const COLORS = {
-  red: "#ef4444",
-  yellow: "#eab308",
-  green: "#22c55e",
+// ANSI color codes for terminal
+const ANSI = {
+  GREEN: "\x1b[32m",
+  YELLOW: "\x1b[33m",
+  RED: "\x1b[31m",
+  RESET: "\x1b[0m",
+  BOLD: "\x1b[1m",
 };
 
 const BARS_PER_COLOR = 6;
@@ -19,43 +21,37 @@ let sessionState = {
   sessionStartTokens: 0,
 };
 
+function getBarColor(consumed: number, max: number): string {
+  const ratio = Math.min(consumed / max, 1);
+  const barIndex = Math.floor(ratio * (BARS_PER_COLOR * 3));
+
+  // Green zone: 0-6 bars (0-60k)
+  if (barIndex < BARS_PER_COLOR) {
+    return ANSI.GREEN;
+  }
+  // Yellow zone: 6-12 bars (60-120k)
+  else if (barIndex < BARS_PER_COLOR * 2) {
+    return ANSI.YELLOW;
+  }
+  // Red zone: 12-18 bars (120-180k)
+  else {
+    return ANSI.RED;
+  }
+}
+
 function renderHealthBar(consumed: number, max: number): string {
   const ratio = Math.min(consumed / max, 1);
   const filledBars = Math.round(ratio * (BARS_PER_COLOR * 3));
+  const color = getBarColor(consumed, max);
 
   let bar = "";
   for (let i = 0; i < BARS_PER_COLOR * 3; i++) {
-    if (i < filledBars) {
-      // Filled bars: red → yellow → green (left to right)
-      if (i < BARS_PER_COLOR) {
-        bar += "█";
-      } else if (i < BARS_PER_COLOR * 2) {
-        bar += "█";
-      } else {
-        bar += "█";
-      }
-    } else {
-      bar += "░";
-    }
+    const char = i < filledBars ? "█" : "░";
+    bar += char;
   }
 
-  return bar;
-}
-
-function getBarColor(consumed: number, max: number): string {
-  const ratio = Math.min(consumed / max, 1);
-  const percentIntoBar = (ratio * (BARS_PER_COLOR * 3)) % 1;
-
-  // Determine which color zone we're in
-  const barIndex = Math.floor(ratio * (BARS_PER_COLOR * 3));
-
-  if (barIndex < BARS_PER_COLOR) {
-    return COLORS.green;
-  } else if (barIndex < BARS_PER_COLOR * 2) {
-    return COLORS.yellow;
-  } else {
-    return COLORS.red;
-  }
+  // Wrap filled portion in color
+  return color + bar.substring(0, filledBars) + ANSI.RESET + bar.substring(filledBars);
 }
 
 function formatTokens(tokens: number): string {
